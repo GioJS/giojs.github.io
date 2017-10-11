@@ -31,10 +31,8 @@ export class Player {
         
         this.sprite.body.velocity.x = 0;
         this.sprite.animations.stop();
-        if(this.direction == Phaser.LEFT)
-            this.sprite.frame = 0;
-        else
-            this.sprite.frame = 7;
+        
+        this.sprite.frame = 4;
         this.direction = Phaser.UP;
     }
 
