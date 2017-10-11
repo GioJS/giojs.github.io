@@ -17,6 +17,8 @@ var PlayState = /** @class */ (function () {
         this.coins.push(new coin_1.Coin(this.game), new coin_1.Coin(this.game), new coin_1.Coin(this.game));
     };
     PlayState.prototype.create = function () {
+        this.time_r = 60;
+        this.last_time = Math.round(this.game.time.totalElapsedSeconds());
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.player.createPlayer();
         var i = 0;
@@ -43,12 +45,28 @@ var PlayState = /** @class */ (function () {
         this.platforms.create(400, 450, 'platform');
         this.platforms.setAll('body.immovable', true);
         this.points_text = this.game.add.text(0, 0, "Points: 0", { "fill": "white" });
+        this.time_text = this.game.add.text(400, 0, "Time: " + this.time_r, { "fill": "white" });
     };
     PlayState.prototype.render = function () {
         this.points_text.setText("Points: " + this.player.points);
+        this.time_text.setText("Time: " + this.time_r);
     };
     PlayState.prototype.update = function () {
         var _this = this;
+        //console.log(this.game.time.totalElapsedSeconds())
+        var now = Math.round(this.game.time.totalElapsedSeconds());
+        if ((now - this.last_time) == 1) {
+            if ((this.time_r - 1) <= 0) {
+                this.time_r = 0;
+            }
+            else {
+                this.time_r -= 1;
+                this.last_time = now;
+            }
+        }
+        if (this.time_r == 0) {
+            this.game.state.start('gameover');
+        }
         if (this.player.points === 90) {
             this.game.state.start('win');
         }
