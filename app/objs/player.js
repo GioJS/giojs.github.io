@@ -25,6 +25,7 @@ var Player = /** @class */ (function () {
             this.sprite.frame = 0;
         else
             this.sprite.frame = 7;
+        this.direction = Phaser.UP;
     };
     Player.prototype.left = function () {
         this.sprite.body.velocity.x = -250;
@@ -45,9 +46,12 @@ var Player = /** @class */ (function () {
             this.sprite.frame = 6;
             this.sprite.body.velocity.x = 250;
         }
-        else {
+        else if (this.direction == Phaser.LEFT) {
             this.sprite.frame = 1;
             this.sprite.body.velocity.x = -250;
+        }
+        else {
+            this.sprite.frame = 4;
         }
     };
     Player.prototype.isOnFloor = function () {

@@ -35,6 +35,7 @@ export class Player {
             this.sprite.frame = 0;
         else
             this.sprite.frame = 7;
+        this.direction = Phaser.UP;
     }
 
     left(){
@@ -58,9 +59,11 @@ export class Player {
             this.sprite.frame = 6;
             this.sprite.body.velocity.x = 250;
         }
-        else{
+        else if(this.direction == Phaser.LEFT){
             this.sprite.frame = 1;
             this.sprite.body.velocity.x = -250;
+        }else{
+            this.sprite.frame = 4;
         }
         
     }
