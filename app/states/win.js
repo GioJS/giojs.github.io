@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("../../lib/phaser.js");
 var WinState = /** @class */ (function () {
-    function WinState(game) {
+    function WinState(game, levelMGR) {
         this.game = game;
+        this.levelMGR = levelMGR;
     }
     WinState.prototype.preload = function () {
         this.game.stage.backgroundColor = '#85b5e1';
@@ -16,7 +17,14 @@ var WinState = /** @class */ (function () {
     };
     WinState.prototype.update = function () {
         if (this.enter.isDown) {
-            this.game.state.start('play', true, false, levels[++curr_level]);
+            var level = this.levelMGR.nextLevel();
+            if (level) {
+                this.game.state.start('play', true, false, level);
+            }
+            else {
+                var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 200, "game finished", { "fill": "red" });
+                text.anchor.setTo(0.5);
+            }
         }
     };
     return WinState;

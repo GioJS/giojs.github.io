@@ -3,6 +3,7 @@ declare var Phaser: any;
 import  "../../lib/phaser.js";
 import { Player } from '../objs/player';
 import { Coin} from '../objs/coin';
+import { Level } from "../level_mng/level";
 
 export class PlayState {
     game: Phaser.Game;
@@ -25,7 +26,7 @@ export class PlayState {
         this.game = game;
     }
 
-    init(level){
+    init(level: Level){
         this.time_r = level.time_r;
         this.player_xy = level.player;
         

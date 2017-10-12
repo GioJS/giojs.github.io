@@ -1,13 +1,16 @@
 declare var Phaser: any;
 
 import  "../../lib/phaser.js";
+import { LevelManager } from "../level_mng/level_mng";
 
 export class WinState {
     game: Phaser.Game;
     cursors: any;
     enter: any;
-    constructor(game: Phaser.Game){
+    levelMGR: LevelManager;
+    constructor(game: Phaser.Game, levelMGR: LevelManager){
         this.game = game;
+        this.levelMGR = levelMGR;
     }
 
     preload() {
@@ -23,7 +26,13 @@ export class WinState {
 
     update(){
         if(this.enter.isDown){
-            this.game.state.start('play', true, false, levels[++curr_level]);
+            var level = this.levelMGR.nextLevel();
+            if(level){
+                this.game.state.start('play', true, false, level);
+            }else {
+                var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY+200, "game finished", {"fill":"red"});
+                text.anchor.setTo(0.5);
+            }
         }
     }
 }

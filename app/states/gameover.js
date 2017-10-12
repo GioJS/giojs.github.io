@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("../../lib/phaser.js");
 var GameoverState = /** @class */ (function () {
-    function GameoverState(game) {
+    function GameoverState(game, levelMGR) {
         this.game = game;
+        this.levelMGR = levelMGR;
     }
     GameoverState.prototype.preload = function () {
         this.game.stage.backgroundColor = '#85b5e1';
@@ -16,7 +17,7 @@ var GameoverState = /** @class */ (function () {
     };
     GameoverState.prototype.update = function () {
         if (this.enter.isDown) {
-            this.game.state.start('play', true, false, levels[curr_level]);
+            this.game.state.start('play', true, false, this.levelMGR.currentLevel());
         }
     };
     return GameoverState;
