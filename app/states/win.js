@@ -16,7 +16,7 @@ var WinState = /** @class */ (function () {
     };
     WinState.prototype.update = function () {
         if (this.enter.isDown) {
-            this.game.state.start('play', true, false, first_level);
+            this.game.state.start('play', true, false, levels[++curr_level]);
         }
     };
     return WinState;

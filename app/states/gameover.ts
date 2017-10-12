@@ -23,7 +23,7 @@ export class GameoverState {
 
     update(){
         if(this.enter.isDown){
-            this.game.state.start('play', true, false, first_level);
+            this.game.state.start('play', true, false, levels[curr_level]);
         }
     }
 }
