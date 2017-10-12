@@ -32,8 +32,9 @@ export class BootState {
     }
 
     update(){
+        
         if(this.enter.isDown){
-            this.game.state.start('play');
+            this.game.state.start('play', true, false, first_level);
         }
     }
 }

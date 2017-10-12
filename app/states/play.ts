@@ -9,17 +9,29 @@ export class PlayState {
     cursors: any;
     esc: any;
     jmp: any;
+    player_xy: any;
+    platforms_coords: any;
     platforms: Phaser.Game.physicsGroup;
     player: Player;
+    coins_coords: any;
     coins: Array<Coin>;
     points_text: any;
     time_r: number;
     last_time: number;
     time_text: any;
-
+    obj: number;
+    game_timer: any;
     constructor(game: Phaser.Game){
         this.game = game;
+    }
+
+    init(level){
+        this.time_r = level.time_r;
+        this.player_xy = level.player;
         
+        this.coins_coords = level.coins;
+        this.platforms_coords = level.platforms;
+        this.obj = level.obj;
     }
 
     preload() {
@@ -28,33 +40,22 @@ export class PlayState {
         this.game.load.crossOrigin = 'anonymous';
         
         this.game.load.image('platform', 'app/assets/platform.png');
-        this.player = new Player(this.game);
-        this.coins = new Array(new Coin(this.game), new Coin(this.game), new Coin(this.game));
-        this.coins.push(new Coin(this.game), new Coin(this.game), new Coin(this.game));
-        this.coins.push(new Coin(this.game), new Coin(this.game), new Coin(this.game));
+        this.player = new Player(this.game, this.player_xy.x, this.player_xy.y);
+
+        this.coins = new Array();
+        for(let coord of this.coins_coords){
+            this.coins.push(new Coin(this.game, coord));
+        }
     }
 
     create() {
-        this.time_r = 60;
+       // this.time_r = 60;
         this.last_time =  Math.round(this.game.time.totalElapsedSeconds());
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.player.createPlayer();
-        var i = 0;
 
-        for(var j=0; j<3; j++){
-            this.coins[j].createCoin(40+i, 120);
-            i += 50;
-        }
-        i = 0;
-        for(var j=3; j<6; j++){
-            this.coins[j].createCoin(520+i, 60);
-            i += 50;
-        }
-
-        i = 0;
-        for(var j=6; j<9; j++){
-            this.coins[j].createCoin(480+i, 400);
-            i += 50;
+        for(let coin of this.coins){
+            coin.createCoin();
         }
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -64,40 +65,32 @@ export class PlayState {
 
         this.platforms = this.game.add.physicsGroup();
        
-        this.platforms.create(500, 150, 'platform');
+        /*this.platforms.create(500, 150, 'platform');
         this.platforms.create(-200, 300, 'platform');
-        this.platforms.create(400, 450, 'platform');
+        this.platforms.create(400, 450, 'platform');*/
+
+        for(let coord of this.platforms_coords){
+            this.platforms.create(coord.x, coord.y, 'platform');
+        }
 
         this.platforms.setAll('body.immovable', true);
 
         this.points_text = this.game.add.text(0, 0, "Points: 0", {"fill":"white"});
         this.time_text = this.game.add.text(400, 0, "Time: "+this.time_r, {"fill":"white"});
+        this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, () => {
+            this.game.state.start('gameover');
+        }, this);
         
     }
 
     render(){
         this.points_text.setText("Points: "+this.player.points);
-        this.time_text.setText("Time: "+this.time_r);
+        this.time_text.setText("Time: "+Math.round(this.game.time.events.duration/1000));
     }
 
     update(){
-        //console.log(this.game.time.totalElapsedSeconds())
-        var now = Math.round(this.game.time.totalElapsedSeconds());
-        if((now - this.last_time) == 1){
-            
-            if((this.time_r - 1) <= 0){
-                this.time_r = 0;
-            }else {
-                this.time_r -= 1;
-                this.last_time = now;
-            }
-        }
-
-        if(this.time_r == 0){
-            this.game.state.start('gameover');
-        }
         
-        if(this.player.points === 90){
+        if(this.player.points === this.obj){
             this.game.state.start('win');
         }
         

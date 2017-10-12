@@ -10,6 +10,7 @@ class Game {
     game: Phaser.Game;
 
     constructor() {
+        
         this.game =new Phaser.Game(800, 600, Phaser.AUTO, 'content');
         this.game.state.add("boot", new BootState(this.game));
         this.game.state.add("play", new PlayState(this.game));

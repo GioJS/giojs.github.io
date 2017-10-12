@@ -8,16 +8,20 @@ export class Player {
     sprite: any;
     direction: any;
     points: number;
-    constructor(game: Phaser.Game){
+    x: number;
+    y: number;
+    constructor(game: Phaser.Game, x, y){
         this.sprite_path = 'app/assets/phaser-dude.png';
         this.game = game;
         this.healt = 100;
+        this.x = x;
+        this.y = y;
         this.points = 0;
         this.game.load.spritesheet('player', this.sprite_path, 32, 48);
     }
 
     createPlayer(){
-        this.sprite = this.game.add.sprite(32, this.game.world.height - 150, 'player');
+        this.sprite = this.game.add.sprite(this.x, this.y, 'player');
         this.sprite.animations.add('left', [0, 1, 2, 3], 10, true);
         this.sprite.animations.add('right', [5, 6, 7, 8], 10, true);
         

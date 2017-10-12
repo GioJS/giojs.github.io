@@ -7,15 +7,17 @@ export class Coin {
     points: number;
     game: Phaser.Game;
     sprite_path: string;
-    constructor(game: Phaser.Game){
+    coords: any;
+    constructor(game: Phaser.Game, coords: any){
         this.game = game;
         this.points = 10;
+        this.coords = coords
         this.sprite_path = 'app/assets/coin.png'
         this.game.load.spritesheet('coin', this.sprite_path, 32, 32, 6);
     }
 
-    createCoin(x, y){
-        this.sprite = this.game.add.sprite(x, y, 'coin');
+    createCoin(){
+        this.sprite = this.game.add.sprite(this.coords.x, this.coords.y, 'coin');
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.animations.add('rotation');
         this.sprite.animations.play('rotation', 30, true);
