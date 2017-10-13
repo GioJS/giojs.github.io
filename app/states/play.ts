@@ -21,12 +21,14 @@ export class PlayState {
     last_time: number;
     time_text: any;
     obj: number;
+    gameover: boolean;
     game_timer: any;
     constructor(game: Phaser.Game){
         this.game = game;
     }
 
     init(level: Level){
+        this.gameover = false;
         this.time_r = level.time_r;
         this.player_xy = level.player;
         
@@ -65,10 +67,6 @@ export class PlayState {
 
 
         this.platforms = this.game.add.physicsGroup();
-       
-        /*this.platforms.create(500, 150, 'platform');
-        this.platforms.create(-200, 300, 'platform');
-        this.platforms.create(400, 450, 'platform');*/
 
         for(let coord of this.platforms_coords){
             this.platforms.create(coord.x, coord.y, 'platform');
@@ -79,7 +77,7 @@ export class PlayState {
         this.points_text = this.game.add.text(0, 0, "Points: 0", {"fill":"white"});
         this.time_text = this.game.add.text(400, 0, "Time: "+this.time_r, {"fill":"white"});
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, () => {
-            this.game.state.start('gameover');
+            this.gameover = true;
         }, this);
         
     }
@@ -90,7 +88,9 @@ export class PlayState {
     }
 
     update(){
-        
+        if(this.gameover){
+            this.game.state.start('gameover');
+        }
         if(this.player.points === this.obj){
             this.game.state.start('win');
         }

@@ -8,6 +8,7 @@ var PlayState = /** @class */ (function () {
         this.game = game;
     }
     PlayState.prototype.init = function (level) {
+        this.gameover = false;
         this.time_r = level.time_r;
         this.player_xy = level.player;
         this.coins_coords = level.coins;
@@ -39,9 +40,6 @@ var PlayState = /** @class */ (function () {
         this.esc = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         this.jmp = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.platforms = this.game.add.physicsGroup();
-        /*this.platforms.create(500, 150, 'platform');
-        this.platforms.create(-200, 300, 'platform');
-        this.platforms.create(400, 450, 'platform');*/
         for (var _b = 0, _c = this.platforms_coords; _b < _c.length; _b++) {
             var coord = _c[_b];
             this.platforms.create(coord.x, coord.y, 'platform');
@@ -50,7 +48,7 @@ var PlayState = /** @class */ (function () {
         this.points_text = this.game.add.text(0, 0, "Points: 0", { "fill": "white" });
         this.time_text = this.game.add.text(400, 0, "Time: " + this.time_r, { "fill": "white" });
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, function () {
-            _this.game.state.start('gameover');
+            _this.gameover = true;
         }, this);
     };
     PlayState.prototype.render = function () {
@@ -59,6 +57,9 @@ var PlayState = /** @class */ (function () {
     };
     PlayState.prototype.update = function () {
         var _this = this;
+        if (this.gameover) {
+            this.game.state.start('gameover');
+        }
         if (this.player.points === this.obj) {
             this.game.state.start('win');
         }
