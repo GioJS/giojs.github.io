@@ -4,6 +4,7 @@ export class Level {
     coins: any;
     obj: number;
     time_r: number;
+    
     constructor(){
 
     }
@@ -16,7 +17,7 @@ export class Level {
 
         this.obj = input.obj;
         this.time_r = input.time_r;
-
+        this.animation = input.animation;
         return this;
     }
 }

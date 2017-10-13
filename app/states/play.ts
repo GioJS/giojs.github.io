@@ -11,7 +11,7 @@ export class PlayState {
     esc: any;
     jmp: any;
     player_xy: any;
-    platforms_coords: any;
+    platforms_objs: any;
     platforms: Phaser.Game.physicsGroup;
     player: Player;
     coins_coords: any;
@@ -33,7 +33,7 @@ export class PlayState {
         this.player_xy = level.player;
         
         this.coins_coords = level.coins;
-        this.platforms_coords = level.platforms;
+        this.platforms_objs = level.platforms;
         this.obj = level.obj;
     }
 
@@ -68,8 +68,16 @@ export class PlayState {
 
         this.platforms = this.game.add.physicsGroup();
 
-        for(let coord of this.platforms_coords){
-            this.platforms.create(coord.x, coord.y, 'platform');
+        for(let platform of this.platforms_objs){
+            var plt = this.platforms.create(platform.x, platform.y, 'platform');
+            if(platform.animation){
+                var tween = this.game.add.tween(plt.body)
+                for(let anim of platform.animation){
+                    tween.to(anim.to, anim.move_time, anim.type);
+                }
+                //.to({y: 150}, platform.time, Phaser.Easing.Quadratic.InOut)
+                tween.loop().start();
+            }
         }
 
         this.platforms.setAll('body.immovable', true);

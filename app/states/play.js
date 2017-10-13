@@ -12,7 +12,7 @@ var PlayState = /** @class */ (function () {
         this.time_r = level.time_r;
         this.player_xy = level.player;
         this.coins_coords = level.coins;
-        this.platforms_coords = level.platforms;
+        this.platforms_objs = level.platforms;
         this.obj = level.obj;
     };
     PlayState.prototype.preload = function () {
@@ -40,9 +40,18 @@ var PlayState = /** @class */ (function () {
         this.esc = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         this.jmp = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.platforms = this.game.add.physicsGroup();
-        for (var _b = 0, _c = this.platforms_coords; _b < _c.length; _b++) {
-            var coord = _c[_b];
-            this.platforms.create(coord.x, coord.y, 'platform');
+        for (var _b = 0, _c = this.platforms_objs; _b < _c.length; _b++) {
+            var platform = _c[_b];
+            var plt = this.platforms.create(platform.x, platform.y, 'platform');
+            if (platform.animation) {
+                var tween = this.game.add.tween(plt.body);
+                for (var _d = 0, _e = platform.animation; _d < _e.length; _d++) {
+                    var anim = _e[_d];
+                    tween.to(anim.to, anim.move_time, anim.type);
+                }
+                //.to({y: 150}, platform.time, Phaser.Easing.Quadratic.InOut)
+                tween.loop().start();
+            }
         }
         this.platforms.setAll('body.immovable', true);
         this.points_text = this.game.add.text(0, 0, "Points: 0", { "fill": "white" });
