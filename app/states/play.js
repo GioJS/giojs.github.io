@@ -66,7 +66,7 @@ var PlayState = /** @class */ (function () {
         var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+" + points, { fill: "green", stroke: "#ffffff", strokeThickness: 15 });
         coin_point.anchor.setTo(0.5, 0);
         coin_point.align = 'center';
-        var coin_tween = this.game.add.tween(coin_point).to({ x: this.points_text.x, y: this.points_text.y }, 800, Phaser.Easing.Exponential.In, true);
+        var coin_tween = this.game.add.tween(coin_point).to({ x: this.points_text.width, y: this.points_text.y }, 800, Phaser.Easing.Exponential.In, true);
         coin_tween.onComplete.add(function () {
             coin_point.destroy();
             this.score_tween.start();
