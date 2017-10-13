@@ -90,10 +90,26 @@ export class PlayState {
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, () => {
             this.gameover = true;
         }, this);
-        
+
+       
+
         this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5}, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 50, Phaser.Easing.Linear.In);
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5}, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
         
+    }
+
+    createCoinScore(points){
+        var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+"+points, {fill: "green", stroke: "#ffffff", strokeThickness: 15});
+        coin_point.anchor.setTo(0.5, 0);
+        coin_point.align = 'center';
+
+        var coin_tween = this.game.add.tween(coin_point).to({x:this.points_text.x, y: this.points_text.y}, 800, Phaser.Easing.Exponential.In, true);
+        
+        coin_tween.onComplete.add(function(){
+            coin_point.destroy();
+            this.score_tween.start();
+            this.player.points += points;
+        }, this);
     }
 
     render(){
@@ -123,8 +139,7 @@ export class PlayState {
        
        for(let coin of this.coins){
             this.game.physics.arcade.collide(this.player.sprite, coin.sprite, () => {
-                    this.player.points += coin.points;
-                    this.score_tween.start();
+                    this.createCoinScore(coin.points);
                     coin.sprite.destroy();
             });
         }

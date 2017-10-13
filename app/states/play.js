@@ -62,6 +62,17 @@ var PlayState = /** @class */ (function () {
         this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5 }, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 50, Phaser.Easing.Linear.In);
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5 }, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.In);
     };
+    PlayState.prototype.createCoinScore = function (points) {
+        var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+" + points, { fill: "green", stroke: "#ffffff", strokeThickness: 15 });
+        coin_point.anchor.setTo(0.5, 0);
+        coin_point.align = 'center';
+        var coin_tween = this.game.add.tween(coin_point).to({ x: this.points_text.x, y: this.points_text.y }, 800, Phaser.Easing.Exponential.In, true);
+        coin_tween.onComplete.add(function () {
+            coin_point.destroy();
+            this.score_tween.start();
+            this.player.points += points;
+        }, this);
+    };
     PlayState.prototype.render = function () {
         this.points_text.setText("Points: " + this.player.points);
         this.time_text.setText("Time: " + this.last_time);
@@ -85,8 +96,7 @@ var PlayState = /** @class */ (function () {
         this.game.physics.arcade.collide(this.player.sprite, this.platforms);
         var _loop_1 = function (coin) {
             this_1.game.physics.arcade.collide(this_1.player.sprite, coin.sprite, function () {
-                _this.player.points += coin.points;
-                _this.score_tween.start();
+                _this.createCoinScore(coin.points);
                 coin.sprite.destroy();
             });
         };
