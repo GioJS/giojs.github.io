@@ -59,13 +59,23 @@ var PlayState = /** @class */ (function () {
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, function () {
             _this.gameover = true;
         }, this);
+        this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5 }, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 50, Phaser.Easing.Linear.In);
+        this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5 }, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.In);
     };
     PlayState.prototype.render = function () {
         this.points_text.setText("Points: " + this.player.points);
-        this.time_text.setText("Time: " + Math.round(this.game.time.events.duration / 1000));
+        this.time_text.setText("Time: " + this.last_time);
+        if (this.ten_secs) {
+            this.time_text.setStyle({ 'fill': 'red' });
+        }
     };
     PlayState.prototype.update = function () {
         var _this = this;
+        this.last_time = Math.round(this.game.time.events.duration / 1000);
+        if (this.last_time <= 10) {
+            this.ten_secs = true;
+            this.finish_time_tween.start();
+        }
         if (this.gameover) {
             this.game.state.start('gameover');
         }
@@ -76,6 +86,7 @@ var PlayState = /** @class */ (function () {
         var _loop_1 = function (coin) {
             this_1.game.physics.arcade.collide(this_1.player.sprite, coin.sprite, function () {
                 _this.player.points += coin.points;
+                _this.score_tween.start();
                 coin.sprite.destroy();
             });
         };

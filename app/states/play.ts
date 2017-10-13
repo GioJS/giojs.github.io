@@ -6,6 +6,7 @@ import { Coin} from '../objs/coin';
 import { Level } from "../level_mng/level";
 
 export class PlayState {
+    ten_secs: boolean;
     game: Phaser.Game;
     cursors: any;
     esc: any;
@@ -23,6 +24,8 @@ export class PlayState {
     obj: number;
     gameover: boolean;
     game_timer: any;
+    score_tween: any;
+    finish_time_tween: any;
     constructor(game: Phaser.Game){
         this.game = game;
     }
@@ -88,26 +91,40 @@ export class PlayState {
             this.gameover = true;
         }, this);
         
+        this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5}, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 50, Phaser.Easing.Linear.In);
+        this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5}, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
+        
     }
 
     render(){
         this.points_text.setText("Points: "+this.player.points);
-        this.time_text.setText("Time: "+Math.round(this.game.time.events.duration/1000));
+        
+        this.time_text.setText("Time: "+this.last_time);
+        if(this.ten_secs){
+            this.time_text.setStyle({'fill':'red'});
+        }
     }
 
     update(){
+        this.last_time = Math.round(this.game.time.events.duration/1000);
+        if(this.last_time<=10){
+            this.ten_secs = true;
+            this.finish_time_tween.start();
+        }
+
         if(this.gameover){
             this.game.state.start('gameover');
         }
         if(this.player.points === this.obj){
             this.game.state.start('win');
         }
-        
+
        this.game.physics.arcade.collide(this.player.sprite, this.platforms);
        
        for(let coin of this.coins){
             this.game.physics.arcade.collide(this.player.sprite, coin.sprite, () => {
                     this.player.points += coin.points;
+                    this.score_tween.start();
                     coin.sprite.destroy();
             });
         }
