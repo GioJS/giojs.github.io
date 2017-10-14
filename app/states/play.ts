@@ -27,6 +27,7 @@ export class PlayState {
     score_tween: any;
     finish_time_tween: any;
     world_bounds: any;
+    pause_text: any;
     constructor(game: Phaser.Game){
         this.game = game;
     }
@@ -62,6 +63,7 @@ export class PlayState {
 
     create() {
        // this.time_r = 60;
+      
        this.ten_secs = false;
         if(this.world_bounds){
             this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
@@ -95,16 +97,28 @@ export class PlayState {
         }
 
         this.platforms.setAll('body.immovable', true);
-
+        this.pause_text = this.game.add.text(650, 0, "Pause");
+        this.pause_text.visible = false;
         this.points_text = this.game.add.text(0, 0, "Points: 0", {"fill":"white"});
         this.points_text.fixedToCamera = true;
         this.time_text = this.game.add.text(400, 0, "Time: "+this.time_r, {"fill":"white"});
         this.time_text.fixedToCamera = true;
+
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, () => {
             this.gameover = true;
         }, this);
 
-       
+        this.game.onPause.add(() => {
+            this.pause_text.visible = true;
+            this.game.paused = true;
+        }, this);
+        
+        this.game.input.onDown.add(function () {
+            if (this.game.paused) {
+                this.game.paused = false;
+                this.pause_text.visible = false;
+            }       
+        }, this);
 
         this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5}, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 50, Phaser.Easing.Linear.In);
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5}, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
@@ -126,6 +140,7 @@ export class PlayState {
     }
 
     render(){
+       
         this.points_text.setText("Points: "+this.player.points);
         
         this.time_text.setText("Time: "+this.last_time);

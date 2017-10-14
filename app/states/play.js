@@ -30,8 +30,8 @@ var PlayState = /** @class */ (function () {
         }
     };
     PlayState.prototype.create = function () {
-        var _this = this;
         // this.time_r = 60;
+        var _this = this;
         this.ten_secs = false;
         if (this.world_bounds) {
             this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
@@ -62,12 +62,24 @@ var PlayState = /** @class */ (function () {
             }
         }
         this.platforms.setAll('body.immovable', true);
+        this.pause_text = this.game.add.text(650, 0, "Pause");
+        this.pause_text.visible = false;
         this.points_text = this.game.add.text(0, 0, "Points: 0", { "fill": "white" });
         this.points_text.fixedToCamera = true;
         this.time_text = this.game.add.text(400, 0, "Time: " + this.time_r, { "fill": "white" });
         this.time_text.fixedToCamera = true;
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, function () {
             _this.gameover = true;
+        }, this);
+        this.game.onPause.add(function () {
+            _this.pause_text.visible = true;
+            _this.game.paused = true;
+        }, this);
+        this.game.input.onDown.add(function () {
+            if (this.game.paused) {
+                this.game.paused = false;
+                this.pause_text.visible = false;
+            }
         }, this);
         this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5 }, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 50, Phaser.Easing.Linear.In);
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5 }, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.In);
