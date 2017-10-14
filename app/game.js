@@ -119,10 +119,10 @@ var Game = /** @class */ (function () {
             },
             "world_bounds": { "x": 0, "y": -500, "width": 800, "height": 1100 }
         });
-        this.levelMGR.addLevel(level4);
+        this.levelMGR.addLevel(level1);
         this.levelMGR.addLevel(level2);
         this.levelMGR.addLevel(level3);
-        this.levelMGR.addLevel(level1);
+        this.levelMGR.addLevel(level4);
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content');
         this.game.state.add("boot", new boot_1.BootState(this.game, this.levelMGR));
         this.game.state.add("play", new play_1.PlayState(this.game));
