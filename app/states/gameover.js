@@ -10,6 +10,7 @@ var GameoverState = /** @class */ (function () {
         this.game.stage.backgroundColor = '#85b5e1';
     };
     GameoverState.prototype.create = function () {
+        this.game.world.setBounds(0, 0, 800, 600);
         var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY, "You loose Press Enter", { "fill": "red" });
         text.anchor.setTo(0.5);
         this.cursors = this.game.input.keyboard.createCursorKeys();

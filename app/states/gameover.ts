@@ -18,6 +18,7 @@ export class GameoverState {
     }
 
     create() {
+        this.game.world.setBounds(0, 0, 800, 600);
         var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY, "You loose Press Enter", {"fill":"red"});
         text.anchor.setTo(0.5);
         this.cursors = this.game.input.keyboard.createCursorKeys();

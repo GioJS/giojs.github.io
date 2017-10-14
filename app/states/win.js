@@ -10,6 +10,7 @@ var WinState = /** @class */ (function () {
         this.game.stage.backgroundColor = '#85b5e1';
     };
     WinState.prototype.create = function () {
+        this.game.world.setBounds(0, 0, 800, 600);
         var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY, "You win Press Enter", { "fill": "green" });
         text.anchor.setTo(0.5);
         this.cursors = this.game.input.keyboard.createCursorKeys();

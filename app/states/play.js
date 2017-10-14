@@ -14,6 +14,9 @@ var PlayState = /** @class */ (function () {
         this.coins_coords = level.coins;
         this.platforms_objs = level.platforms;
         this.obj = level.obj;
+        if (level.world_bounds) {
+            this.world_bounds = level.world_bounds;
+        }
     };
     PlayState.prototype.preload = function () {
         this.game.stage.backgroundColor = '#85b5e1';
@@ -29,9 +32,13 @@ var PlayState = /** @class */ (function () {
     PlayState.prototype.create = function () {
         var _this = this;
         // this.time_r = 60;
+        if (this.world_bounds) {
+            this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
+        }
         this.last_time = Math.round(this.game.time.totalElapsedSeconds());
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.player.createPlayer();
+        this.player.sprite.checkWorldBounds = true;
         for (var _i = 0, _a = this.coins; _i < _a.length; _i++) {
             var coin = _a[_i];
             coin.createCoin();
@@ -55,7 +62,9 @@ var PlayState = /** @class */ (function () {
         }
         this.platforms.setAll('body.immovable', true);
         this.points_text = this.game.add.text(0, 0, "Points: 0", { "fill": "white" });
+        this.points_text.fixedToCamera = true;
         this.time_text = this.game.add.text(400, 0, "Time: " + this.time_r, { "fill": "white" });
+        this.time_text.fixedToCamera = true;
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, function () {
             _this.gameover = true;
         }, this);
@@ -121,6 +130,12 @@ var PlayState = /** @class */ (function () {
         }
         if (this.jmp.isDown && (this.player.isOnFloor())) {
             this.player.jump();
+        }
+        if (this.player.sprite.y < 0) {
+            this.game.camera.y -= 4;
+        }
+        else {
+            this.game.camera.y += 4;
         }
     };
     return PlayState;

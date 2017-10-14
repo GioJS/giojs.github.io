@@ -26,6 +26,7 @@ export class PlayState {
     game_timer: any;
     score_tween: any;
     finish_time_tween: any;
+    world_bounds: any;
     constructor(game: Phaser.Game){
         this.game = game;
     }
@@ -38,6 +39,9 @@ export class PlayState {
         this.coins_coords = level.coins;
         this.platforms_objs = level.platforms;
         this.obj = level.obj;
+        if(level.world_bounds){
+            this.world_bounds =level.world_bounds;
+        }
     }
 
     preload() {
@@ -54,12 +58,18 @@ export class PlayState {
         }
     }
 
+    
+
     create() {
        // this.time_r = 60;
+        if(this.world_bounds){
+            this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
+        }
         this.last_time =  Math.round(this.game.time.totalElapsedSeconds());
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.player.createPlayer();
-
+        this.player.sprite.checkWorldBounds = true;
+        
         for(let coin of this.coins){
             coin.createCoin();
         }
@@ -86,7 +96,9 @@ export class PlayState {
         this.platforms.setAll('body.immovable', true);
 
         this.points_text = this.game.add.text(0, 0, "Points: 0", {"fill":"white"});
+        this.points_text.fixedToCamera = true;
         this.time_text = this.game.add.text(400, 0, "Time: "+this.time_r, {"fill":"white"});
+        this.time_text.fixedToCamera = true;
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, () => {
             this.gameover = true;
         }, this);
@@ -158,6 +170,12 @@ export class PlayState {
         }
        if(this.jmp.isDown && (this.player.isOnFloor())){
            this.player.jump();
+       }
+
+       if(this.player.sprite.y < 0) {
+           this.game.camera.y -= 4;
+       }else {
+           this.game.camera.y += 4;
        }
     }
        
