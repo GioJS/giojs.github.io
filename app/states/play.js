@@ -104,7 +104,7 @@ var PlayState = /** @class */ (function () {
         }
         this.game.physics.arcade.collide(this.player.sprite, this.platforms);
         var _loop_1 = function (coin) {
-            this_1.game.physics.arcade.collide(this_1.player.sprite, coin.sprite, function () {
+            this_1.game.physics.arcade.overlap(this_1.player.sprite, coin.sprite, function () {
                 _this.createCoinScore(coin.points);
                 coin.sprite.destroy();
             });

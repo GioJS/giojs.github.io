@@ -150,7 +150,7 @@ export class PlayState {
        this.game.physics.arcade.collide(this.player.sprite, this.platforms);
        
        for(let coin of this.coins){
-            this.game.physics.arcade.collide(this.player.sprite, coin.sprite, () => {
+            this.game.physics.arcade.overlap(this.player.sprite, coin.sprite, () => {
                     this.createCoinScore(coin.points);
                     coin.sprite.destroy();
             });
