@@ -62,6 +62,7 @@ export class PlayState {
 
     create() {
        // this.time_r = 60;
+       this.ten_secs = false;
         if(this.world_bounds){
             this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
         }
