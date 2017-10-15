@@ -23,6 +23,12 @@ export class WinState {
         text.anchor.setTo(0.5);
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.enter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        
+        this.game.input.onDown.add(function () {
+            if (this.game.paused) {
+                this.game.paused = false;
+            }       
+        }, this);
     }
 
     update(){
