@@ -141,7 +141,7 @@ var PlayState = /** @class */ (function () {
                 this.player.stop();
             }
         }
-        if (this.jmp.isDown && (this.player.isOnFloor())) {
+        if (this.jmp.isDown && this.player.isOnFloor()) {
             this.player.jump();
         }
         if (this.player.sprite.y < 0) {
