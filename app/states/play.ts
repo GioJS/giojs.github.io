@@ -30,6 +30,7 @@ export class PlayState {
     pause_text: any;
     coin_effect: any;
     jump_effect: any;
+    theme: any;
     constructor(game: Phaser.Game){
         this.game = game;
     }
@@ -62,6 +63,7 @@ export class PlayState {
 
         this.game.load.audio('coin_effect', 'app/assets/p-ping.mp3');
         this.game.load.audio('jump_effect', 'app/assets/jump.wav');
+        this.game.load.audio('theme', 'app/assets/draft-song.wav');
     }
 
     
@@ -130,6 +132,8 @@ export class PlayState {
         
         this.coin_effect = this.game.add.audio('coin_effect');
         this.jump_effect = this.game.add.audio('jump_effect');
+        this.theme = this.game.add.audio('theme');
+        this.theme.play();
     }
 
     createCoinScore(points){
@@ -156,9 +160,13 @@ export class PlayState {
         }
     }
 
+    shutdown() {
+        this.theme.stop();
+    }
+    
     update(){
         this.last_time = Math.round(this.game.time.events.duration/1000);
-        if(this.last_time<=10){
+        if(this.last_time <= 10){
             this.ten_secs = true;
             this.finish_time_tween.start();
         }
