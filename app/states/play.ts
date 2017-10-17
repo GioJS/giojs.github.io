@@ -133,7 +133,7 @@ export class PlayState {
         this.coin_effect = this.game.add.audio('coin_effect');
         this.jump_effect = this.game.add.audio('jump_effect');
         this.theme = this.game.add.audio('theme');
-        this.theme.play();
+        this.theme.loopFull();
     }
 
     createCoinScore(points){

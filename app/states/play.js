@@ -89,7 +89,7 @@ var PlayState = /** @class */ (function () {
         this.coin_effect = this.game.add.audio('coin_effect');
         this.jump_effect = this.game.add.audio('jump_effect');
         this.theme = this.game.add.audio('theme');
-        this.theme.play();
+        this.theme.loopFull();
     };
     PlayState.prototype.createCoinScore = function (points) {
         var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+" + points, { fill: "green", stroke: "#ffffff", strokeThickness: 15 });
