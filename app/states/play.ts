@@ -28,6 +28,7 @@ export class PlayState {
     finish_time_tween: any;
     world_bounds: any;
     pause_text: any;
+    coin_effect: any;
     constructor(game: Phaser.Game){
         this.game = game;
     }
@@ -57,6 +58,8 @@ export class PlayState {
         for(let coord of this.coins_coords){
             this.coins.push(new Coin(this.game, coord));
         }
+
+        this.game.load.audio('coin_effect', 'app/assets/p-ping.mp3');
     }
 
     
@@ -123,6 +126,7 @@ export class PlayState {
         this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5}, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 50, Phaser.Easing.Linear.In);
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5}, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
         
+        this.coin_effect = this.game.add.audio('coin_effect');
     }
 
     createCoinScore(points){
@@ -167,6 +171,7 @@ export class PlayState {
        
        for(let coin of this.coins){
             this.game.physics.arcade.overlap(this.player.sprite, coin.sprite, () => {
+                    this.coin_effect.play();
                     this.createCoinScore(coin.points);
                     coin.sprite.destroy();
             });
