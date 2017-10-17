@@ -29,6 +29,7 @@ export class PlayState {
     world_bounds: any;
     pause_text: any;
     coin_effect: any;
+    jump_effect: any;
     constructor(game: Phaser.Game){
         this.game = game;
     }
@@ -60,6 +61,7 @@ export class PlayState {
         }
 
         this.game.load.audio('coin_effect', 'app/assets/p-ping.mp3');
+        this.game.load.audio('jump_effect', 'app/assets/jump.wav');
     }
 
     
@@ -127,6 +129,7 @@ export class PlayState {
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5}, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
         
         this.coin_effect = this.game.add.audio('coin_effect');
+        this.jump_effect = this.game.add.audio('jump_effect');
     }
 
     createCoinScore(points){
@@ -190,6 +193,7 @@ export class PlayState {
             }
         }
        if(this.jmp.isDown && this.player.isOnFloor()){
+           this.jump_effect.play();
            this.player.jump();
        }
 

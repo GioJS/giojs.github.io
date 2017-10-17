@@ -29,6 +29,7 @@ var PlayState = /** @class */ (function () {
             this.coins.push(new coin_1.Coin(this.game, coord));
         }
         this.game.load.audio('coin_effect', 'app/assets/p-ping.mp3');
+        this.game.load.audio('jump_effect', 'app/assets/jump.wav');
     };
     PlayState.prototype.create = function () {
         // this.time_r = 60;
@@ -85,6 +86,7 @@ var PlayState = /** @class */ (function () {
         this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5 }, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 50, Phaser.Easing.Linear.In);
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5 }, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.In);
         this.coin_effect = this.game.add.audio('coin_effect');
+        this.jump_effect = this.game.add.audio('jump_effect');
     };
     PlayState.prototype.createCoinScore = function (points) {
         var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+" + points, { fill: "green", stroke: "#ffffff", strokeThickness: 15 });
@@ -145,6 +147,7 @@ var PlayState = /** @class */ (function () {
             }
         }
         if (this.jmp.isDown && this.player.isOnFloor()) {
+            this.jump_effect.play();
             this.player.jump();
         }
         if (this.player.sprite.y < 0) {
