@@ -5,7 +5,6 @@ export class Level {
     obj: number;
     time_r: number;
     world_bounds: any;
-    animation: any;
     constructor(){
 
     }
@@ -19,7 +18,6 @@ export class Level {
         this.obj = input.obj;
         this.time_r = input.time_r;
         this.world_bounds = input.world_bounds;
-        this.animation = input.animation;
         return this;
     }
 }
