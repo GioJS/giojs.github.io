@@ -29,6 +29,10 @@ export class GameoverState {
                 this.game.paused = false;
             }       
         }, this);
+
+        this.game.input.onTap.add(() => {
+            this.game.state.start('play', true, false, this.levelMGR.currentLevel());        
+        }, this);
     }
 
     update(){

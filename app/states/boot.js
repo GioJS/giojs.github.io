@@ -11,11 +11,19 @@ var BootState = /** @class */ (function () {
         this.game.load.crossOrigin = 'anonymous';
     };
     BootState.prototype.create = function () {
+        var _this = this;
         this.game.world.setBounds(0, 0, 800, 600);
+        /* this.game.scale.pageAlignHorizontally = true;
+         this.game.scale.pageAlignVertically = true;
+         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+         this.game.scale.setScreenSize(true);*/
         var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY, "Press Enter");
         text.anchor.setTo(0.5);
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.enter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.game.input.onTap.add(function () {
+            _this.game.state.start('play', true, false, _this.levelMGR.currentLevel());
+        }, this);
     };
     BootState.prototype.update = function () {
         if (this.enter.isDown) {

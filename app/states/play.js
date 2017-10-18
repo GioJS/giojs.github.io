@@ -33,8 +33,13 @@ var PlayState = /** @class */ (function () {
         this.game.load.audio('theme', 'app/assets/draft-song.wav');
     };
     PlayState.prototype.create = function () {
-        // this.time_r = 60;
         var _this = this;
+        this.game.input.onTap.add(function () {
+            if (_this.player.isOnFloor()) {
+                _this.jump_effect.play();
+                _this.player.jump();
+            }
+        });
         this.ten_secs = false;
         if (this.world_bounds) {
             this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
@@ -112,6 +117,20 @@ var PlayState = /** @class */ (function () {
     PlayState.prototype.shutdown = function () {
         this.theme.stop();
     };
+    PlayState.prototype.tapMove = function () {
+        if (this.game.input.activePointer.isDown) {
+            //console.log('walk',this.player.sprite.x, this.game.input.worldX)
+            if (this.player.isOnFloor()) {
+                if (this.game.input.worldX < this.player.sprite.x) {
+                    return "left";
+                }
+                else if (this.game.input.worldX > this.player.sprite.x) {
+                    return "right";
+                }
+            }
+        }
+        return "stop";
+    };
     PlayState.prototype.update = function () {
         var _this = this;
         this.last_time = Math.round(this.game.time.events.duration / 1000);
@@ -143,10 +162,10 @@ var PlayState = /** @class */ (function () {
             this.game.state.start('boot');
         }
         if (this.player.isOnFloor()) {
-            if (this.cursors.left.isDown) {
+            if (this.cursors.left.isDown || this.tapMove() === "left") {
                 this.player.left();
             }
-            else if (this.cursors.right.isDown) {
+            else if (this.cursors.right.isDown || this.tapMove() === "right") {
                 this.player.right();
             }
             else {

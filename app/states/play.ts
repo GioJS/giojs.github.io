@@ -31,6 +31,8 @@ export class PlayState {
     coin_effect: any;
     jump_effect: any;
     theme: any;
+    swipeX: number;
+    swipeY: number;
     constructor(game: Phaser.Game){
         this.game = game;
     }
@@ -63,15 +65,23 @@ export class PlayState {
 
         this.game.load.audio('coin_effect', 'app/assets/p-ping.mp3');
         this.game.load.audio('jump_effect', 'app/assets/jump.wav');
-        this.game.load.audio('theme', 'app/assets/draft-song.wav');
+        this.game.load.audio('theme', 'app/assets/draft-song.wav');    
+        
     }
 
-    
 
     create() {
-       // this.time_r = 60;
-      
-       this.ten_secs = false;
+       
+        this.game.input.onTap.add(() => {
+            if(this.player.isOnFloor()){
+                this.jump_effect.play();
+                this.player.jump();
+            }
+
+        });
+
+
+        this.ten_secs = false;
         if(this.world_bounds){
             this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
         }
@@ -126,7 +136,7 @@ export class PlayState {
                 this.pause_text.visible = false;
             }       
         }, this);
-
+        
         this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5}, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 50, Phaser.Easing.Linear.In);
         this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5}, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
         
@@ -164,6 +174,21 @@ export class PlayState {
         this.theme.stop();
     }
     
+    tapMove(){
+        if(this.game.input.activePointer.isDown){
+            //console.log('walk',this.player.sprite.x, this.game.input.worldX)
+            if(this.player.isOnFloor()){
+                if(this.game.input.worldX < this.player.sprite.x){
+                    return "left";
+                }
+                else if(this.game.input.worldX > this.player.sprite.x){
+                    return "right";
+                }
+            }
+       }
+       return "stop";
+    }
+
     update(){
         this.last_time = Math.round(this.game.time.events.duration/1000);
         if(this.last_time <= 10){
@@ -189,13 +214,15 @@ export class PlayState {
             });
         }
 
+       
+
        if(this.esc.isDown){
            this.game.state.start('boot');
        }
        if(this.player.isOnFloor()){
-            if(this.cursors.left.isDown){
+            if(this.cursors.left.isDown || this.tapMove() === "left"){
                 this.player.left();
-            }else if(this.cursors.right.isDown){
+            }else if(this.cursors.right.isDown || this.tapMove() === "right"){
                 this.player.right();
             }else{
                 this.player.stop();

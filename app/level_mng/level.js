@@ -10,7 +10,6 @@ var Level = /** @class */ (function () {
         this.obj = input.obj;
         this.time_r = input.time_r;
         this.world_bounds = input.world_bounds;
-        this.animation = input.animation;
         return this;
     };
     return Level;

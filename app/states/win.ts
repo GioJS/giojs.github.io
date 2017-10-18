@@ -29,17 +29,25 @@ export class WinState {
                 this.game.paused = false;
             }       
         }, this);
+
+        this.game.input.onTap.add(() => {
+            this.swithLevel();
+        }, this);
+    }
+
+    swithLevel(){
+        var level = this.levelMGR.nextLevel();
+        if(level){
+            this.game.state.start('play', true, false, level);
+        }else {
+            var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY+200, "game finished", {"fill":"red"});
+            text.anchor.setTo(0.5);
+        }
     }
 
     update(){
         if(this.enter.isDown){
-            var level = this.levelMGR.nextLevel();
-            if(level){
-                this.game.state.start('play', true, false, level);
-            }else {
-                var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY+200, "game finished", {"fill":"red"});
-                text.anchor.setTo(0.5);
-            }
+            this.swithLevel();
         }
     }
 }
