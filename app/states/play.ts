@@ -169,6 +169,7 @@ export class PlayState {
         if(this.last_time <= 10){
             this.ten_secs = true;
             this.finish_time_tween.start();
+            this.theme._sound.playbackRate.value = 2;
         }
 
         if(this.gameover){
