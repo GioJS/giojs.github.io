@@ -23,10 +23,7 @@ export class BootState {
 
     create() {
         this.game.world.setBounds(0, 0, 800, 600);
-       /* this.game.scale.pageAlignHorizontally = true;
-		this.game.scale.pageAlignVertically = true;
-		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-		this.game.scale.setScreenSize(true);*/
+ 
         var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY, "Press Enter");
         text.anchor.setTo(0.5);
         this.cursors = this.game.input.keyboard.createCursorKeys();
