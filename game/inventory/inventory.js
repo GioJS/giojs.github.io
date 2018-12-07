@@ -25,19 +25,23 @@ var Inventory = (function () {
     };
 
     Inventory.prototype.usePotions = function (n) {
-        this.addPotions(-n);
+        if (this.getPotions() > 0)
+            this.addPotions(-n);
     };
 
     Inventory.prototype.useAntitodes = function (n) {
-        this.addAntitodes(-n);
+        if (this.getAntitodes() > 0)
+            this.addAntitodes(-n);
     };
 
     Inventory.prototype.useMegapotions = function (n) {
-        this.addMegapotions(-n);
+        if (this.getMegapotions() > 0)
+            this.addMegapotions(-n);
     };
 
     Inventory.prototype.useRevives = function (n) {
-        this.addRevives(-n);
+        if (this.getRevives() > 0)
+            this.addRevives(-n);
     };
 
     Inventory.prototype.getPotions = function () {
