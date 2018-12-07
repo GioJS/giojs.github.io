@@ -34,7 +34,7 @@ var UsePotion = new Phaser.Class({
         this.warrior.on("pointerdown", function () {
             this.scene.deselectAll();
             if (this.scene.index === 0) {
-                if(this.scene.team[0].hp === this.scene.team[0].maxHp || this.scene.team[0].hp === 0)
+                if(this.scene.team[0].hp === this.scene.team[0].maxHp || this.scene.team[0].hp === 0 || inventory.getPotions() <= 0)
                     return;
                 if (this.scene.team[0].maxHp - this.scene.team[0].hp <= 100) {
                     this.scene.team[0].hp += this.scene.team[0].maxHp - this.scene.team[0].hp;
@@ -128,7 +128,7 @@ var UsePotion = new Phaser.Class({
                     this.warrior.setText("Warrior " + this.team[0].hp + "/" + this.team[0].maxHp);
                     break;
                 case 1:
-                    if (this.team[1].hp === this.team[1].maxHp || this.team[1].hp === 0)
+                    if (this.team[1].hp === this.team[1].maxHp || this.team[1].hp === 0 || inventory.getPotions() <= 0)
                         return;
                     if (this.team[1].maxHp - this.team[1].hp <= 100) {
                         this.team[1].hp += this.team[1].maxHp - this.team[1].hp;
