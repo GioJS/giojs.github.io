@@ -45,11 +45,11 @@ var ExperienceManager = (function () {
         this.emitter = new Phaser.Events.EventEmitter();
     }
 
-    ExperienceManager.prototype.increaseLevel = function() {
-        if(this.level === 99)
+    ExperienceManager.prototype.increaseLevel = function () {
+        if (this.level === 99)
             return;
         this.level = this.nextLevel++;
-        this.hero.maxHp += 50;
+        this.hero.maxHp += this.hero.maxHp < 9999 ? 50 : 0;
         this.hero.damage += 1;
         this.hero.magicDefence += 1;
         this.hero.magicDamage += 1;
@@ -57,9 +57,9 @@ var ExperienceManager = (function () {
         this.emitter.emit('nextLevel');
     };
 
-    ExperienceManager.prototype.gainXp = function(xp) {
+    ExperienceManager.prototype.gainXp = function (xp) {
         this.xp += xp;
-        if(this.xp >= levels[this.nextLevel])
+        if (this.xp >= levels[this.nextLevel])
             this.increaseLevel();
     };
 
