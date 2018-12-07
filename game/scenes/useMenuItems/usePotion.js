@@ -117,7 +117,7 @@ var UsePotion = new Phaser.Class({
         } else if (event.code === 'KeyX') {
             switch (this.index) {
                 case 0:
-                    if (this.team[0].hp === this.team[0].maxHp || this.team[0].hp === 0)
+                    if (this.team[0].hp === this.team[0].maxHp || this.team[0].hp === 0 || inventory.getPotions() <= 0)
                         return;
                     if (this.team[0].maxHp - this.team[0].hp <= 100) {
                         this.team[0].hp += this.team[0].maxHp - this.team[0].hp;
