@@ -1,18 +1,71 @@
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Game</title>
-        <script src="lib/phaser.js"></script>
-        <script>
-            var exports = {};
-        </script>
-        <script src="g.js"></script>
-    </head>
-    <body>
-        
-        <center>
-            <h1>Game</h1>
-            <div id="content"></div>
-        </center>
-    </body>
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>TypeScript HTML App</title>
+    <script src="node_modules/phaser/dist/phaser.min.js"></script>
+    <script src="game/inventory/inventory.js"></script>
+    <script src="game/movement/movement.js"></script>
+    <script src="game/utils.js"></script>
+    <script src="game/experience/experienceManager.js"></script>
+    <script src="game/battle/team.js"></script>
+    <script src="game/battle/enemies.js"></script>
+    <script src="game/battle/battleSystem.js"></script>
+    <script src="game/scenes/mainMenu.js"></script>
+    <script src="game/scenes/stats.js"></script>
+    <script src="game/scenes/useMenuItems/useRevive.js"></script>
+    <script src="game/scenes/useMenuItems/usePotion.js"></script>
+    <script src="game/scenes/itemsMenu.js"></script>
+    <script src="game/scenes/initialMap.js"></script>
+    <script src="game/scenes/preludeScene.js"></script>
+    <script src="game/scenes/bootScene.js"></script>
+    <script src="game/main.js"></script>
+    <style>
+        canvas {
+            display: block;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <script>
+        function fullscreen() {
+            var el = document.getElementsByTagName('canvas')[0];
+            var requestFullScreen = el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen;
+
+            if (requestFullScreen) {
+                requestFullScreen.call(el);
+                resize();
+                window.addEventListener("resize", resize, false);
+            }
+        }
+
+        function resize() {
+            var canvas = document.querySelector("canvas");
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+            var windowRatio = windowWidth / windowHeight;
+            var gameRatio = game.config.width / game.config.height;
+
+            if(windowRatio < gameRatio){
+                canvas.style.width = windowWidth + "px";
+                canvas.style.height = (windowWidth / gameRatio) + "px";
+            }
+            else {
+                canvas.style.width = (windowHeight * gameRatio) + "px";
+                canvas.style.height = windowHeight + "px";
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+<h1>Phaser rpg</h1>
+<button onclick="fullscreen()">Fullscreen</button>
+<div id="content"></div>
+</body>
 </html>
