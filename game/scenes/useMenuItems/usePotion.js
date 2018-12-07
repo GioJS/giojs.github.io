@@ -59,7 +59,7 @@ var UsePotion = new Phaser.Class({
         this.mage.on("pointerdown", function () {
             this.scene.deselectAll();
             if(this.scene.index === 1) {
-                if(this.scene.team[1].hp === this.scene.team[1].maxHp || this.scene.team[1].hp === 0)
+                if(this.scene.team[1].hp === this.scene.team[1].maxHp || this.scene.team[1].hp === 0 || inventory.getPotions() <= 0)
                     return;
                 if (this.scene.team[1].maxHp - this.scene.team[1].hp <= 100) {
                     this.scene.team[1].hp += this.scene.team[1].maxHp - this.scene.team[1].hp;
