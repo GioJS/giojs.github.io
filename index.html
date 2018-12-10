@@ -38,29 +38,8 @@
 
             if (requestFullScreen) {
                 requestFullScreen.call(el);
-                resize();
-                window.addEventListener("resize", resize, false);
             }
         }
-
-        function resize() {
-            var canvas = document.querySelector("canvas");
-            var windowWidth = window.innerWidth;
-            var windowHeight = window.innerHeight;
-            var windowRatio = windowWidth / windowHeight;
-            var gameRatio = game.config.width / game.config.height;
-
-            if(windowRatio < gameRatio){
-                canvas.style.width = windowWidth + "px";
-                canvas.style.height = (windowWidth / gameRatio) + "px";
-            }
-            else {
-                canvas.style.width = (windowHeight * gameRatio) + "px";
-                canvas.style.height = windowHeight + "px";
-            }
-        }
-
-
     </script>
 </head>
 <body>
@@ -68,15 +47,15 @@
 <button onclick="fullscreen()">Fullscreen</button>
 <div id="content"></div>
 <div>
-<h3>Commands:</h3>
-<ul>
-<li>arrows: movement map</li>
-<li>Enter: main menu</li>
-<li>A/Z: main menu selection</li>
-<li>X: confirm selection main menu</li>
-<li>left/right arrows: selection battle menu</li>
-<li>space: confirm selection (start menu / battle menu)</li>
-</ul>
+    <h3>Commands:</h3>
+    <ul>
+        <li>arrows: movement map</li>
+        <li>Enter: main menu</li>
+        <li>A/Z: main menu selection</li>
+        <li>X: confirm selection main menu</li>
+        <li>left/right arrows: selection battle menu</li>
+        <li>space: confirm selection (start menu / battle menu)</li>
+    </ul>
 </div>
 </body>
 </html>
