@@ -89,18 +89,31 @@ var PlayState = /** @class */ (function () {
                 this.pause_text.visible = false;
             }
         }, this);
-        this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5 }, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 50, Phaser.Easing.Linear.In);
-        this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5 }, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.In);
+        this.score_tween = this.game.add.tween(this.points_text.scale).to({
+            x: 1.5,
+            y: 1.5
+        }, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 50, Phaser.Easing.Linear.In);
+        this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({
+            x: 1.5,
+            y: 1.5
+        }, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.In);
         this.coin_effect = this.game.add.audio('coin_effect');
         this.jump_effect = this.game.add.audio('jump_effect');
         this.theme = this.game.add.audio('theme');
         this.theme.loopFull();
     };
     PlayState.prototype.createCoinScore = function (points) {
-        var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+" + points, { fill: "green", stroke: "#ffffff", strokeThickness: 15 });
+        var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+" + points, {
+            fill: "green",
+            stroke: "#ffffff",
+            strokeThickness: 15
+        });
         coin_point.anchor.setTo(0.5, 0);
         coin_point.align = 'center';
-        var coin_tween = this.game.add.tween(coin_point).to({ x: this.points_text.width, y: this.points_text.y }, 800, Phaser.Easing.Exponential.In, true);
+        var coin_tween = this.game.add.tween(coin_point).to({
+            x: this.points_text.width,
+            y: this.points_text.y
+        }, 800, Phaser.Easing.Exponential.In, true);
         coin_tween.onComplete.add(function () {
             coin_point.destroy();
             this.score_tween.start();
@@ -145,7 +158,16 @@ var PlayState = /** @class */ (function () {
         if (this.player.points === this.obj) {
             this.game.state.start('win');
         }
-        this.game.physics.arcade.collide(this.player.sprite, this.platforms);
+        this.game.physics.arcade.collide(this.player.sprite, this.platforms, function () {
+            if (!_this.player.isOnFloor()) {
+                if (_this.player.direction == Phaser.LEFT) {
+                    _this.player.sprite.body.velocity.x = 50;
+                }
+                else if (_this.player.direction == Phaser.RIGHT) {
+                    _this.player.sprite.body.velocity.x = -50;
+                }
+            }
+        });
         var _loop_1 = function (coin) {
             this_1.game.physics.arcade.overlap(this_1.player.sprite, coin.sprite, function () {
                 _this.coin_effect.play();

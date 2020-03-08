@@ -1,4 +1,4 @@
 del g.js
 cd app
-tsc > nul || browserify .\game.js | uglifyjs > ..\g.js
+tsc  || browserify .\game.js | uglifyjs > ..\g.js
 cd ..

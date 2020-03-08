@@ -1,9 +1,9 @@
 declare var Phaser: any;
 
-import  "../../lib/phaser.js";
-import { Player } from '../objs/player';
-import { Coin} from '../objs/coin';
-import { Level } from "../level_mng/level";
+import "../../lib/phaser.js";
+import {Player} from '../objs/player';
+import {Coin} from '../objs/coin';
+import {Level} from "../level_mng/level";
 
 export class PlayState {
     ten_secs: boolean;
@@ -33,20 +33,21 @@ export class PlayState {
     theme: any;
     swipeX: number;
     swipeY: number;
-    constructor(game: Phaser.Game){
+
+    constructor(game: Phaser.Game) {
         this.game = game;
     }
 
-    init(level: Level){
+    init(level: Level) {
         this.gameover = false;
         this.time_r = level.time_r;
         this.player_xy = level.player;
-        
+
         this.coins_coords = level.coins;
         this.platforms_objs = level.platforms;
         this.obj = level.obj;
-        if(level.world_bounds){
-            this.world_bounds =level.world_bounds;
+        if (level.world_bounds) {
+            this.world_bounds = level.world_bounds;
         }
     }
 
@@ -54,26 +55,26 @@ export class PlayState {
         this.game.stage.backgroundColor = '#85b5e1';
 
         this.game.load.crossOrigin = 'anonymous';
-        
+
         this.game.load.image('platform', 'app/assets/platform.png');
         this.player = new Player(this.game, this.player_xy.x, this.player_xy.y);
 
         this.coins = new Array();
-        for(let coord of this.coins_coords){
+        for (let coord of this.coins_coords) {
             this.coins.push(new Coin(this.game, coord));
         }
 
         this.game.load.audio('coin_effect', 'app/assets/p-ping.mp3');
         this.game.load.audio('jump_effect', 'app/assets/jump.wav');
-        this.game.load.audio('theme', 'app/assets/draft-song.wav');    
-        
+        this.game.load.audio('theme', 'app/assets/draft-song.wav');
+
     }
 
 
     create() {
-       
+
         this.game.input.onTap.add(() => {
-            if(this.player.isOnFloor()){
+            if (this.player.isOnFloor()) {
                 this.jump_effect.play();
                 this.player.jump();
             }
@@ -82,15 +83,15 @@ export class PlayState {
 
 
         this.ten_secs = false;
-        if(this.world_bounds){
+        if (this.world_bounds) {
             this.game.world.setBounds(this.world_bounds.x, this.world_bounds.y, this.world_bounds.width, this.world_bounds.height);
         }
-        this.last_time =  Math.round(this.game.time.totalElapsedSeconds());
+        this.last_time = Math.round(this.game.time.totalElapsedSeconds());
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.player.createPlayer();
         this.player.sprite.checkWorldBounds = true;
-        
-        for(let coin of this.coins){
+
+        for (let coin of this.coins) {
             coin.createCoin();
         }
 
@@ -101,11 +102,11 @@ export class PlayState {
 
         this.platforms = this.game.add.physicsGroup();
 
-        for(let platform of this.platforms_objs){
+        for (let platform of this.platforms_objs) {
             var plt = this.platforms.create(platform.x, platform.y, 'platform');
-            if(platform.animation){
+            if (platform.animation) {
                 var tween = this.game.add.tween(plt.body)
-                for(let anim of platform.animation){
+                for (let anim of platform.animation) {
                     tween.to(anim.to, anim.move_time, anim.type);
                 }
                 //.to({y: 150}, platform.time, Phaser.Easing.Quadratic.InOut)
@@ -116,9 +117,9 @@ export class PlayState {
         this.platforms.setAll('body.immovable', true);
         this.pause_text = this.game.add.text(650, 0, "Pause");
         this.pause_text.visible = false;
-        this.points_text = this.game.add.text(0, 0, "Points: 0", {"fill":"white"});
+        this.points_text = this.game.add.text(0, 0, "Points: 0", {"fill": "white"});
         this.points_text.fixedToCamera = true;
-        this.time_text = this.game.add.text(400, 0, "Time: "+this.time_r, {"fill":"white"});
+        this.time_text = this.game.add.text(400, 0, "Time: " + this.time_r, {"fill": "white"});
         this.time_text.fixedToCamera = true;
 
         this.game.time.events.add(Phaser.Timer.SECOND * this.time_r, () => {
@@ -129,115 +130,134 @@ export class PlayState {
             this.pause_text.visible = true;
             this.game.paused = true;
         }, this);
-        
+
         this.game.input.onDown.add(function () {
             if (this.game.paused) {
                 this.game.paused = false;
                 this.pause_text.visible = false;
-            }       
+            }
         }, this);
-        
-        this.score_tween = this.game.add.tween(this.points_text.scale).to({ x: 1.5, y: 1.5}, 50, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 50, Phaser.Easing.Linear.In);
-        this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({ x: 1.5, y: 1.5}, 200, Phaser.Easing.Linear.In).to({ x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
-        
+
+        this.score_tween = this.game.add.tween(this.points_text.scale).to({
+            x: 1.5,
+            y: 1.5
+        }, 50, Phaser.Easing.Linear.In).to({x: 1, y: 1}, 50, Phaser.Easing.Linear.In);
+        this.finish_time_tween = this.game.add.tween(this.time_text.scale).to({
+            x: 1.5,
+            y: 1.5
+        }, 200, Phaser.Easing.Linear.In).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.In);
+
         this.coin_effect = this.game.add.audio('coin_effect');
         this.jump_effect = this.game.add.audio('jump_effect');
         this.theme = this.game.add.audio('theme');
         this.theme.loopFull();
     }
 
-    createCoinScore(points){
-        var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+"+points, {fill: "green", stroke: "#ffffff", strokeThickness: 15});
+    createCoinScore(points) {
+        var coin_point = this.game.add.text(this.player.sprite.position.x, this.player.sprite.y, "+" + points, {
+            fill: "green",
+            stroke: "#ffffff",
+            strokeThickness: 15
+        });
         coin_point.anchor.setTo(0.5, 0);
         coin_point.align = 'center';
 
-        var coin_tween = this.game.add.tween(coin_point).to({x: this.points_text.width, y: this.points_text.y}, 800, Phaser.Easing.Exponential.In, true);
-        
-        coin_tween.onComplete.add(function(){
+        var coin_tween = this.game.add.tween(coin_point).to({
+            x: this.points_text.width,
+            y: this.points_text.y
+        }, 800, Phaser.Easing.Exponential.In, true);
+
+        coin_tween.onComplete.add(function () {
             coin_point.destroy();
             this.score_tween.start();
             this.player.points += points;
         }, this);
     }
 
-    render(){
-       
-        this.points_text.setText("Points: "+this.player.points);
-        
-        this.time_text.setText("Time: "+this.last_time);
-        if(this.ten_secs){
-            this.time_text.setStyle({'fill':'red'});
+    render() {
+
+        this.points_text.setText("Points: " + this.player.points);
+
+        this.time_text.setText("Time: " + this.last_time);
+        if (this.ten_secs) {
+            this.time_text.setStyle({'fill': 'red'});
         }
     }
 
     shutdown() {
         this.theme.stop();
     }
-    
-    tapMove(){
-        if(this.game.input.activePointer.isDown){
+
+    tapMove() {
+        if (this.game.input.activePointer.isDown) {
             //console.log('walk',this.player.sprite.x, this.game.input.worldX)
-            if(this.player.isOnFloor()){
-                if(this.game.input.worldX < this.player.sprite.x){
+            if (this.player.isOnFloor()) {
+                if (this.game.input.worldX < this.player.sprite.x) {
                     return "left";
-                }
-                else if(this.game.input.worldX > this.player.sprite.x){
+                } else if (this.game.input.worldX > this.player.sprite.x) {
                     return "right";
                 }
             }
-       }
-       return "stop";
+        }
+        return "stop";
     }
 
-    update(){
-        this.last_time = Math.round(this.game.time.events.duration/1000);
-        if(this.last_time <= 10){
+    update() {
+        this.last_time = Math.round(this.game.time.events.duration / 1000);
+        if (this.last_time <= 10) {
             this.ten_secs = true;
             this.finish_time_tween.start();
             this.theme._sound.playbackRate.value = 2;
         }
 
-        if(this.gameover){
+        if (this.gameover) {
             this.game.state.start('gameover');
         }
-        if(this.player.points === this.obj){
+        if (this.player.points === this.obj) {
             this.game.state.start('win');
         }
 
-       this.game.physics.arcade.collide(this.player.sprite, this.platforms);
-       
-       for(let coin of this.coins){
+        this.game.physics.arcade.collide(this.player.sprite, this.platforms, () => {
+            if (!this.player.isOnFloor()) {
+                if (this.player.direction == Phaser.LEFT) {
+                    this.player.sprite.body.velocity.x = 50;
+                } else if (this.player.direction == Phaser.RIGHT) {
+                    this.player.sprite.body.velocity.x = -50;
+                }
+            }
+        });
+
+        for (let coin of this.coins) {
             this.game.physics.arcade.overlap(this.player.sprite, coin.sprite, () => {
-                    this.coin_effect.play();
-                    this.createCoinScore(coin.points);
-                    coin.sprite.destroy();
+                this.coin_effect.play();
+                this.createCoinScore(coin.points);
+                coin.sprite.destroy();
             });
         }
 
-       
 
-       if(this.esc.isDown){
-           this.game.state.start('boot');
-       }
-       if(this.player.isOnFloor()){
-            if(this.cursors.left.isDown || this.tapMove() === "left"){
+        if (this.esc.isDown) {
+            this.game.state.start('boot');
+        }
+        if (this.player.isOnFloor()) {
+            if (this.cursors.left.isDown || this.tapMove() === "left") {
                 this.player.left();
-            }else if(this.cursors.right.isDown || this.tapMove() === "right"){
+            } else if (this.cursors.right.isDown || this.tapMove() === "right") {
                 this.player.right();
-            }else{
+            } else {
                 this.player.stop();
             }
         }
-       if(this.jmp.isDown && this.player.isOnFloor()){
-           this.jump_effect.play();
-           this.player.jump();
-       }
+        if (this.jmp.isDown && this.player.isOnFloor()) {
+            this.jump_effect.play();
+            this.player.jump();
+        }
 
-       if(this.player.sprite.y < 0) {
-           this.game.camera.y -= 4;
-       }else {
-           this.game.camera.y += 4;
-       }
+        if (this.player.sprite.y < 0) {
+            this.game.camera.y -= 4;
+        } else {
+            this.game.camera.y += 4;
+        }
     }
-       
+
 }
